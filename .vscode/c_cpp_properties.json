@@ -1,0 +1,31 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/opt/ros/humble/include/**",
+        "/home/lu/Git_Project/github/ros2_learning/dev_ws/install/learning_interface/include/**",
+        "/home/lu/ddt_ros2_ws/src/controller/rl_controller/include/**",
+        "/home/lu/ddt_ros2_ws/src/hardware/hardware_bridge/include/**",
+        "/home/lu/ddt_ros2_ws/src/hardware/tita_robot/include/**",
+        "/home/lu/ddt_ros2_ws/src/interaction/keyboard_controller/include/**",
+        "/home/lu/ddt_ros2_ws/src/interaction/teleop_command/include/**",
+        "/home/lu/ddt_ros2_ws/src/ros_utils/include/**",
+        "/home/lu/ddt_ros2_ws/src/simulation/gazebo_bridge/include/**",
+        "/home/lu/ddt_ros2_ws/src/simulation/mujoco_bridge/mujoco_ros2_control/include/**",
+        "/home/lu/ddt_ros2_ws/src/simulation/mujoco_bridge/mujoco_sim_ros2/include/**",
+        "/home/lu/ddt_ros2_ws/src/simulation/webots_bridge/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}
