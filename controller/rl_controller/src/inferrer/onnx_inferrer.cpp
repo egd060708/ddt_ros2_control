@@ -40,10 +40,10 @@ bool ONNXInferrer::loadModel(const std::string & modelPath, bool verbose)
   inputShapes_.clear();
   outputShapes_.clear();
   // 遍历输入（将const char*转换为std::string存入基类inputNames_）
-  // ONNX Runtime 1.14+ 移除了 GetInputName，改用 GetInputNameAllocated
+  // 与 README 一致：使用 ONNX Runtime 1.10（提供 GetInputName / GetOutputName）
   for (size_t i = 0; i < policySessionPtr_->GetInputCount(); i++) {
-    Ort::AllocatedStringPtr inputNamePtr = policySessionPtr_->GetInputNameAllocated(i, allocator);
-    inputNames_.push_back(std::string(inputNamePtr.get()));
+    const char * inputName = policySessionPtr_->GetInputName(i, allocator);
+    inputNames_.push_back(std::string(inputName));
     inputShapes_.push_back(
       policySessionPtr_->GetInputTypeInfo(i).GetTensorTypeAndShapeInfo().GetShape());
     size_t size = 1;
@@ -53,10 +53,9 @@ bool ONNXInferrer::loadModel(const std::string & modelPath, bool verbose)
     inputSizes_.push_back(size);
   }
   // 遍历输出（同理）
-  // ONNX Runtime 1.14+ 移除了 GetOutputName，改用 GetOutputNameAllocated
   for (size_t i = 0; i < policySessionPtr_->GetOutputCount(); i++) {
-    Ort::AllocatedStringPtr outputNamePtr = policySessionPtr_->GetOutputNameAllocated(i, allocator);
-    outputNames_.push_back(std::string(outputNamePtr.get()));
+    const char * outputName = policySessionPtr_->GetOutputName(i, allocator);
+    outputNames_.push_back(std::string(outputName));
     outputShapes_.push_back(
       policySessionPtr_->GetOutputTypeInfo(i).GetTensorTypeAndShapeInfo().GetShape());
     size_t size = 1;

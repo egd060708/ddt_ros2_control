@@ -1,0 +1,18 @@
+# Default parameters for interaction_data_recorder (can be overridden via launch CLI).
+# output_directory 为空时，节点会解析为「含 src/ 的工作空间根目录」下的 data/。
+interaction_data_recorder:
+  ros__parameters:
+    sample_rate_hz: 100.0
+    command_publish_rate_hz: 50.0
+    output_directory: ""
+    # 仅文件名则写入 output_directory；绝对路径需当前用户对该路径有写权限（/test 等通常无权限）
+    output_csv_filename: "test/test1.csv"
+    joint_states_topic: "joint_states"
+    imu_topic: "imu_sensor_broadcaster/imu"
+    cmd_twist_topic: "command/cmd_twist"
+    cmd_pose_topic: "command/cmd_pose"
+    cmd_key_topic: "command/cmd_key"
+    subscribe_cmd_topics: true
+    start_delay_sec: 2.0
+    clear_commands_on_wait: true
+    wait_for_joint_state_sec: 30.0

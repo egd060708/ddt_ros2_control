@@ -1,0 +1,92 @@
+# =============================================================================
+# interaction_data_recorder — 指令序列 YAML 说明（与 recorder_node 一致）
+# =============================================================================
+#
+# 顶层仅支持一个键：
+#   sequence:   必填；步骤列表；每步 duration_sec 为仿真时间（use_sim_time + /clock）
+#
+# ---------- 采集时间（手动窗口）----------
+# 若序列中 **任意一步** 出现了 record_start 或 record_stop，则启用「显式采集」模式：
+#   - 仅在 record_start 与 record_stop 之间向 CSV 写入采样行；
+#   - 若某 record_stop 之后仍有步骤，序列会继续执行（发指令等），但不再写 CSV，
+#     直到下一次 record_start。
+#   - 多条采集段：第二次及以后会生成 stem_part1.csv、stem_part2.csv …
+# 若序列中 **没有任何** record_start / record_stop，则行为与旧版相同：
+#   从序列开始写入，直到整条 sequence 结束再关闭 CSV。
+#
+#   type: record_start   开始写入 CSV（依赖当时已有 joint_states 关节名）；建议 duration_sec: 0
+#   type: record_stop    停止写入并关闭当前 CSV；建议 duration_sec: 0
+#
+# ---------- 每步通用字段 ----------
+#   type:          见下文
+#   duration_sec:  本步持续时间（秒，仿真时钟）
+#
+# ---------- type: twist ----------
+#   linear: x, y, z      可选，默认 0.0
+#   angular: x, y, z     可选，默认 0.0
+#
+# ---------- type: key ----------
+#   data:  字符串（如 transform_up / rl_0 …）
+#
+# ---------- type: pose ----------
+#   frame_id:  可选，默认 "map"
+#   position:  x, y, z
+#   orientation_rpy: roll, pitch, yaw（弧度）；与 orientation_quat 二选一，优先 rpy
+#   orientation_quat: x, y, z, w
+#
+# ---------- type: wait | none | idle ----------
+#   clear_commands_on_wait 见 recorder_params.yaml
+#
+# =============================================================================
+# 示例：先起身后进 RL，再只在「匀速前进」段采集数据
+# =============================================================================
+
+sequence:
+  - type: wait
+    duration_sec: 2.0
+
+  - type: key
+    duration_sec: 0.2
+    data: "transform_up"
+
+  - type: wait
+    duration_sec: 5.0
+
+  - type: key
+    duration_sec: 0.2
+    data: "rl_0"
+
+  - type: wait
+    duration_sec: 2.0
+
+  # 仅以下时间段写入 CSV（由 duration_sec 控制该段时长；或提前 record_stop）
+  - type: record_start
+    duration_sec: 0.0
+
+  - type: twist
+    duration_sec: 5.0
+    linear:
+      x: 0.5
+      y: 0.0
+      z: 0.0
+    angular:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+
+  - type: record_stop
+    duration_sec: 0.0
+
+  - type: twist
+    duration_sec: 2.0
+    linear:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    angular:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+
+  - type: wait
+    duration_sec: 1.0

@@ -26,6 +26,7 @@ tar xvf onnxruntime-linux-x64-1.10.0.tgz
 sudo cp -a onnxruntime-linux-x64-1.10.0/include/* /usr/include
 sudo cp -a onnxruntime-linux-x64-1.10.0/lib/* /usr/lib
 ```
+- **注意**：`rl_controller` 按 **ONNX Runtime 1.10** 编译与链接（使用 `GetInputName` / `GetOutputName` 等 API）。导出的 `.onnx` 策略需与该版本兼容（IR/opset 不宜过高）；若出现 `The given version [xx] is not supported, only version 1 to 10...`，请用较低 **opset** 重新导出模型，或换用与模型匹配的 ONNX Runtime 版本（需同步改代码 API）。
 - Ubuntu 22.04, ros2 humble, gazebo classic, webots R2025a
 安装好ros2 humble后，安装以下依赖：
 ```bash

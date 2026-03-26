@@ -56,6 +56,8 @@ else()
     ${FSM_FILES} src/inferrer/onnx_inferrer.cpp
     src/rl_controller_node.cpp
   )
+  # 固定使用系统安装的 ONNX Runtime（按 README：安装到 /usr/include 和 /usr/lib）。
+  # 如需切换到其他版本，请在系统层面替换（或单独新建构建配置），不在 CMake 中依赖 ONNXRUNTIME_ROOT。
   target_link_libraries(rl_controller rl_controller_parameters onnxruntime)
 endif()
 

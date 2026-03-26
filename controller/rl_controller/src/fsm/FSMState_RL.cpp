@@ -281,7 +281,7 @@ void FSMState_RL::update_forward()
       input_datas.push_back(input_data_2);
       action_vec_ = vectorToEigen(inferrer_->computeActions(input_datas));
       obs_.last_actions = action_vec_;
-      action_vec_ = reindex(action_vec_);
+      // action_vec_ = reindex(action_vec_);
       action_vec_ = re_sign(action_vec_);
       obs_history_vec_.head(obs_history_vec_.size() - obs_vec_.size()) =
         obs_history_vec_.tail(obs_history_vec_.size() - obs_vec_.size());
