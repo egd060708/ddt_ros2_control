@@ -1,0 +1,4 @@
+# d1h RL 配置目录：除下列外，其它 *.onnx 为本地/实验模型
+controller/rl_controller/config/d1h/*.onnx
+!controller/rl_controller/config/d1h/flat.onnx
+!controller/rl_controller/config/d1h/squatdown.onnx

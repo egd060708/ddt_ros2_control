@@ -40,6 +40,14 @@ def launch_setup(context, *args, **kwargs):
         ),
         ros2_supervisor=True,
     )
+    translation_supervisor_node = Node(
+        package="webots_bridge",
+        executable="ros2_supervisor_with_height.py",
+        arguments=["--robot-name=TranslationSupervisor"],
+        parameters=[{"tracked_robot_name": robot_name}],
+        additional_env={"WEBOTS_CONTROLLER_URL": "TranslationSupervisor"},
+        output="screen",
+    )
 
     robot_controllers = os.path.join(
         get_package_share_directory("rl_controller"),
@@ -138,6 +146,7 @@ def launch_setup(context, *args, **kwargs):
     return [
         webots,
         webots._supervisor,
+        translation_supervisor_node,
         webots_event_handler,
         ros2_reset_handler,
     ] + get_ros2_nodes()

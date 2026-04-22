@@ -10,6 +10,11 @@ Robot {
   controller "<extern>"
   supervisor TRUE
 }
+Robot {
+  name "TranslationSupervisor"
+  controller "<extern>"
+  supervisor TRUE
+}
 WorldInfo {
   title "Uneven Terrain"
   basicTimeStep 2

@@ -67,6 +67,11 @@ Robot {
   controller "<extern>"
   supervisor TRUE
 }
+Robot {
+  name "TranslationSupervisor"
+  controller "<extern>"
+  supervisor TRUE
+}
 StraightStairs {
   translation 0.8 0 0
   stepSize 0.31 1.27 0.23

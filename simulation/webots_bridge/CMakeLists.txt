@@ -20,6 +20,10 @@ ament_auto_add_library(${PROJECT_NAME} SHARED
 pluginlib_export_plugin_description_file(webots_ros2_control webots_bridge_plugin.xml)
 
 install(DIRECTORY config launch worlds DESTINATION share/${PROJECT_NAME})
+install(PROGRAMS
+  scripts/ros2_supervisor_with_height.py
+  DESTINATION lib/${PROJECT_NAME}
+)
 # install(DIRECTORY urdf DESTINATION share/${PROJECT_NAME})
 
 if(BUILD_TESTING)

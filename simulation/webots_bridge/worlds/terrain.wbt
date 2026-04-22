@@ -23,6 +23,11 @@ Robot {
   controller "<extern>"
   supervisor TRUE
 }
+Robot {
+  name "TranslationSupervisor"
+  controller "<extern>"
+  supervisor TRUE
+}
 Solid {
   translation 1.87 0 0.15
   children [

@@ -21,7 +21,7 @@ from rclpy.duration import Duration
 from rclpy.node import Node
 from rclpy.qos import DurabilityPolicy, QoSProfile, ReliabilityPolicy
 from sensor_msgs.msg import Imu, JointState
-from std_msgs.msg import String
+from std_msgs.msg import Float64, String
 
 
 def default_workspace_data_directory() -> str:
@@ -62,6 +62,7 @@ class RecorderNode(Node):
         self.declare_parameter('cmd_twist_topic', 'command/cmd_twist')
         self.declare_parameter('cmd_pose_topic', 'command/cmd_pose')
         self.declare_parameter('cmd_key_topic', 'command/cmd_key')
+        self.declare_parameter('body_height_topic', 'body_height')
         self.declare_parameter('subscribe_cmd_topics', True)
         self.declare_parameter('start_delay_sec', 2.0)
         self.declare_parameter('clear_commands_on_wait', True)
@@ -115,9 +116,14 @@ class RecorderNode(Node):
         self._latest_twist: Optional[Twist] = None
         self._latest_pose: Optional[PoseStamped] = None
         self._latest_key: str = ''
+        self._latest_body_height: Optional[float] = None
 
         self.create_subscription(JointState, jt, self._cb_joint_state, qos_sensor)
         self.create_subscription(Imu, imu_t, self._cb_imu, qos_sensor)
+        bh_t = self.get_parameter('body_height_topic').get_parameter_value().string_value.strip()
+        self._record_body_height = bool(bh_t)
+        if bh_t:
+            self.create_subscription(Float64, bh_t, self._cb_body_height, qos_sensor)
         if self._subscribe_cmds:
             self.create_subscription(Twist, ct, self._cb_twist, qos_cmd)
             self.create_subscription(PoseStamped, cp, self._cb_pose, qos_cmd)
@@ -195,6 +201,10 @@ class RecorderNode(Node):
     def _cb_key(self, msg: String) -> None:
         with self._lock:
             self._latest_key = msg.data
+
+    def _cb_body_height(self, msg: Float64) -> None:
+        with self._lock:
+            self._latest_body_height = float(msg.data)
 
     def _arm_recording(self) -> None:
         if self._timer_arm is not None:
@@ -349,6 +359,8 @@ class RecorderNode(Node):
             'imu_gyro_x', 'imu_gyro_y', 'imu_gyro_z',
             'imu_accel_x', 'imu_accel_y', 'imu_accel_z',
         ]
+        if self._record_body_height:
+            cols += ['body_height']
         cols += [
             'cmd_twist_linear_x', 'cmd_twist_linear_y', 'cmd_twist_linear_z',
             'cmd_twist_angular_x', 'cmd_twist_angular_y', 'cmd_twist_angular_z',
@@ -524,6 +536,11 @@ class RecorderNode(Node):
                 row['imu_accel_x'] = imu.linear_acceleration.x
                 row['imu_accel_y'] = imu.linear_acceleration.y
                 row['imu_accel_z'] = imu.linear_acceleration.z
+
+            if self._record_body_height:
+                bh = self._latest_body_height
+                if bh is not None:
+                    row['body_height'] = bh
 
             tw = self._latest_twist
             ps = self._latest_pose
