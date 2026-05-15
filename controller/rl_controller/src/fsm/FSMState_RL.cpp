@@ -275,17 +275,19 @@ void FSMState_RL::update_forward()
     if (!stop_update_) {
       update_observations();
       std::vector<std::vector<tensor_element_t>> input_datas;
-      std::vector<tensor_element_t> input_data_1 = eigenToVector(obs_vec_);
-      std::vector<tensor_element_t> input_data_2 = eigenToVector(obs_history_vec_);
-      input_datas.push_back(input_data_1);
-      input_datas.push_back(input_data_2);
+      input_datas.push_back(eigenToVector(obs_vec_));
+      if (rl_params_->use_obs_history_input) {
+        input_datas.push_back(eigenToVector(obs_history_vec_));
+      }
       action_vec_ = vectorToEigen(inferrer_->computeActions(input_datas));
       obs_.last_actions = action_vec_;
       action_vec_ = reindex(action_vec_);
       action_vec_ = re_sign(action_vec_);
-      obs_history_vec_.head(obs_history_vec_.size() - obs_vec_.size()) =
-        obs_history_vec_.tail(obs_history_vec_.size() - obs_vec_.size());
-      obs_history_vec_.tail(obs_vec_.size()) = obs_vec_;
+      if (rl_params_->use_obs_history_input) {
+        obs_history_vec_.head(obs_history_vec_.size() - obs_vec_.size()) =
+          obs_history_vec_.tail(obs_history_vec_.size() - obs_vec_.size());
+        obs_history_vec_.tail(obs_vec_.size()) = obs_vec_;
+      }
     }
     absoluteWait(_start_time, interval);
   }

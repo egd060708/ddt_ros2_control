@@ -408,6 +408,8 @@ void RlController::update_control_parameters()
     get_node()->get_parameter<int>(policy_name + ".num_obs", rl_params.num_obs);
     get_node()->get_parameter<int>(policy_name + ".num_actions", rl_params.num_actions);
     get_node()->get_parameter<int>(policy_name + ".history_len", rl_params.history_len);
+    get_node()->get_parameter<bool>(
+      policy_name + ".use_obs_history_input", rl_params.use_obs_history_input);
     get_node()->get_parameter<std::vector<std::string>>(
       policy_name + ".observations_name", rl_params.observations_name);
     get_node()->get_parameter<std::vector<std::string>>(

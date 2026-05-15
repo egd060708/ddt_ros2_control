@@ -6,7 +6,7 @@ interaction_data_recorder:
     command_publish_rate_hz: 50.0
     output_directory: ""
     # 仅文件名则写入 output_directory；绝对路径需当前用户对该路径有写权限（/test 等通常无权限）
-    output_csv_filename: "ddt_rl/height35/baseline_with_amp_reset.csv"
+    output_csv_filename: "ddt_rl/height40_final/wamp_model_1w2.csv"
     joint_states_topic: "joint_states"
     imu_topic: "imu_sensor_broadcaster/imu"
     cmd_twist_topic: "command/cmd_twist"

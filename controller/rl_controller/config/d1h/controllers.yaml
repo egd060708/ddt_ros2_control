@@ -78,14 +78,17 @@
         - "rl_flat"
         - "rl_squatdown"
 
+      # ONNX 双输入（nn_input0=当前观测, nn_input1=观测历史）时省略或设为 true；
+      # 仅单输入 nn_input0 的新模型设为 use_obs_history_input: false
       rl_flat:
-        policy_path: config/d1h/height35_4_model_1w.onnx
+        policy_path: config/d1h/amp_final_test/amp_ppo_model_2w1.onnx
         output_name: "nn_output"
 
         # env
         num_obs: 33
         num_actions: 8
         history_len: 10
+        use_obs_history_input: false
         observations_name: ["ang_vel", "gravity", "commands", "dof_pos", "dof_vel", "last_actions"]
         commands_name: ["lin_vel_x", "lin_vel_y", "ang_vel_z"]
         commands_scale: [2.0, 2.0, 0.25] # lin_vel_scale, lin_vel_scale, ang_vel_scale

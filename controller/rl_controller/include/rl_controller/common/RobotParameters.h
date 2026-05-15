@@ -63,6 +63,8 @@ struct RLParameters
   int num_obs;
   int num_actions;
   int history_len{1};
+  /// 若 ONNX 仅有 nn_input0 等单输入，设为 false；默认 true 表示第二路为观测历史（原 nn_input1）
+  bool use_obs_history_input{true};
   std::vector<std::string> observations_name{"ang_vel", "gravity", "commands",
                                              "dof_pos", "dof_vel", "last_actions"};
   std::vector<std::string> commands_name{"lin_vel_x", "lin_vel_y", "ang_vel_z"};
