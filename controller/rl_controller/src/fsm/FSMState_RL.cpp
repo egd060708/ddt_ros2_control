@@ -84,7 +84,6 @@ void FSMState_RL::run()
   for (auto i : _data->params->wheel_indices) {
     pos[i] = .0f;
   }
-
   // compute command
   std::vector<tensor_element_t> torques;
   for (int i = 0; i < rl_params_->num_actions; i++) {
@@ -114,6 +113,14 @@ void FSMState_RL::run()
       _data->low_cmd->qd(i) = is_wheel_joint ? 0.0 : command;
       _data->low_cmd->qd_dot(i) = is_wheel_joint ? action_scaled : 0.0;
       _data->low_cmd->tau_cmd(i) = 0.0;
+    } else if (rl_params_->control_type == "T") {
+      tensor_element_t command = action_scaled;
+      _data->low_cmd->kp(i) = 0.0;
+      _data->low_cmd->kd(i) = 0.0;
+      _data->low_cmd->qd(i) = 0.0;
+      _data->low_cmd->qd_dot(i) = 0.0;
+      _data->low_cmd->tau_cmd(i) =
+        rl_params_->joint_kp[i] * command - rl_params_->joint_kd[i] * vel[i];
     } else {
       throw std::runtime_error("[FSMState_RL] Unknown control type");
     }
